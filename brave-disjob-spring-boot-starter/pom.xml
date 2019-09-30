@@ -18,4 +18,16 @@
 		  <version>Angel.M1</version>
 	  </dependency>
   </dependencies>
+	<distributionManagement>
+		<repository>
+			<id>rdc-releases</id>
+			<url>https://repo.rdc.aliyun.com/repository/106618-release-wKl6Od/</url>
+		</repository>
+		<snapshotRepository>
+			<id>rdc-snapshots</id>
+			<url>https://repo.rdc.aliyun.com/repository/106618-snapshot-4kOtF2/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
 </project>
