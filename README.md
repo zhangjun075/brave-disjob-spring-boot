@@ -8,6 +8,7 @@
 
 ## 版本
 第一版本Angle.M1。里程碑版本。
+第二版本Angle.M2。20191007
 
 ## 使用说明
 * 对于pom文件，需要具备以下
@@ -121,8 +122,38 @@ public class MainDispatcher extends Dispatcher {
 
 写完以上两个类，基本就可以运行了，当然，需要有Zookeeper集群。所有的信息还是注册在Zookeeper集群上的。
 
-## 下一版本迭代
-* 上传maven仓库
+## Angel.M2版本
+* 优化了注册worker节点信息，如果存在就不注册。
+* 优化了worker对象，目前如下即可
+```java
+@Slf4j
+@Component
+@EnableBraveDisJob(name = "demo3")
+public class MainWorker extends WorkerRegister {
+
+    public String jobName;
+
+    @Override
+    public void run(@NotNull String ids) {
+        try {
+            TimeUnit.SECONDS.sleep(40);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //处理列表，取得最大和最小的id，处理的时候，后台需要最好幂等的控制，否则不能用这种分片算法
+        List<Integer> idl = processItem(ids);
+
+        int minId = idl.stream().min(Integer::compareTo).orElse(0);
+        int maxId = idl.stream().max(Integer::compareTo).orElse(0);
+        log.info("{} the min:{},and the max is:{}",jobName,minId,maxId);
+    }
+
+}
+```
+目前只需要自己实现一个run方法即可。如果需要打印或者记录job的相关的信息，可以加一个属性jobName，jobName会被自动注入job的配置名字。
+
+
+## 下一版本可能迭代
 * 优化autoconfigure逻辑，包括：
 	- 注册逻辑优化，代码精简。
 	- 合并worker和dispatcher.

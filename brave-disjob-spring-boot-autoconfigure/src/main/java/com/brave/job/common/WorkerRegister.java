@@ -10,6 +10,7 @@ import com.brave.config.ClientConfiguration;
 import com.brave.util.IpUtil;
 import com.brave.util.JobUtil;
 import com.brave.vo.JobProperty;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.CreateMode;
 
@@ -30,9 +31,18 @@ public abstract class WorkerRegister {
      * @param path
      * @param value
      */
-    public void register(String path,String value){
-        clientConfiguration.setNodeData(path,value);
-    }
+	public void register(String path,String value) throws Exception {
+		String classPackageName = clientConfiguration.getNodeDate(path);
+		//如果是空的，就直接注册，如果不是空的，节点的包名必须一致，否则要抛异常。
+		if(Strings.isNullOrEmpty(classPackageName)) {
+			clientConfiguration.setNodeData(path,value);
+		} else {
+			if( !classPackageName.equals(value)) {
+				throw new Exception("集群中worker节点的包名不一致。");
+			}
+		}
+
+	}
 
     /**
      * @param jobName
@@ -101,7 +111,7 @@ public abstract class WorkerRegister {
 //        register("/"+jobName,pkg);
 //    }
 
-    public void init_1(String jobName) {
+    public void init_1(String jobName) throws Exception{
         String pkg = this.getClass().getName();
         register("/"+jobName,pkg);
     }
