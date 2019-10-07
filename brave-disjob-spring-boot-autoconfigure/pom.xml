@@ -7,10 +7,10 @@
 	<parent>
 		<groupId>com.brave</groupId>
 		<artifactId>brave-disjob-spring-boot</artifactId>
-		<version>Angel.M1</version>
+		<version>Angel.M2</version>
 	</parent>
 	<artifactId>brave-disjob-spring-boot-autoconfigure</artifactId>
-	<version>Angel.M1</version>
+	<version>Angel.M2</version>
 	<name>brave-disjob-spring-boot-autoconfigure</name>
 
 	<dependencies>

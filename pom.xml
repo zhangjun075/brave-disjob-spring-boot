@@ -11,7 +11,7 @@
 	<groupId>com.brave</groupId>
 	<artifactId>brave-disjob-spring-boot</artifactId>
 	<packaging>pom</packaging>
-	<version>Angel.M1</version>
+	<version>Angel.M2</version>
 	<name>brave-disjob-spring-boot</name>
 	<url>http://maven.apache.org</url>
 	<properties>
