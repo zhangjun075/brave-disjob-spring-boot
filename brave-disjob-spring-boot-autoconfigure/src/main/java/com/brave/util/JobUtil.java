@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
@@ -63,15 +64,24 @@ public class JobUtil {
         if(null != jobs && jobs.size() >0) {
             jobs.parallelStream().forEach(jobProperty -> {
                 String job = jobProperty.getJob();
-                if(jobProperty.getLock() == null || jobProperty.getLock().equals("")) {
+                if(jobProperty.getLock() == null || "".equals(jobProperty.getLock())) {
                     jobProperty.setLock("/" + job +"-lock");
                 }
                 String root = "/" + job;
-                String subNode = root + "/" + IpUtil.getLocalIP().toString() + "-" + port;
+                String subNode = root + "/" + IpUtil.getLocalIP() + "-" + port;
                 jobProperty.setRoot(root);
                 jobProperty.setSubNode(subNode);
-                jobProperty.setExecutor(IpUtil.getLocalIP().toString() + "-" + port);
+                jobProperty.setExecutor(IpUtil.getLocalIP() + "-" + port);
                 jobProperty.setLog("/job/log/"+job);
+
+				//added by  zhangjun for switcher
+				if(StringUtils.isEmpty(jobProperty.getSwitchPath())) {
+					jobProperty.setSwitchPath("/" + job + "-switcher");
+				}
+				if(StringUtils.isEmpty(jobProperty.getSwitchSubPath())) {
+					jobProperty.setSwitchSubPath(jobProperty.getSwitchPath() + "/" + IpUtil.getLocalIP()+":" + port);
+				}
+
                 JOB_NODE_MAP.putIfAbsent(job,jobProperty);
             });
         }

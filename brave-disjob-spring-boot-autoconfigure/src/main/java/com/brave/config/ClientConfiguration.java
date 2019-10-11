@@ -185,8 +185,10 @@ public class ClientConfiguration {
     public void registerAllLocalNode() {
 
         JobUtil.JOB_NODE_MAP.forEach((s, jobProperty) -> {
-            Stat stat;
-            Stat stat1;
+			Stat stat;//写root节点
+			Stat stat1;//写任务节点
+			Stat stat2;//写开关节点
+			Stat stat3;
             try {
                 stat = curatorFramework.checkExists().forPath(jobProperty.getRoot());
 
@@ -198,6 +200,19 @@ public class ClientConfiguration {
                 if(stat1 == null) {
                     curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath(jobProperty.getSubNode(),null);
                 }
+				//注册下switcher，便于控制机器的执行情况。
+				stat2 = curatorFramework.checkExists().forPath(jobProperty.getSwitchPath());
+				if(stat2 ==  null) {
+					curatorFramework.create().withMode(CreateMode.PERSISTENT).forPath(jobProperty.getSwitchPath());
+				}
+				//在主节点下注册开关属性
+				String switchSubNodePath  = jobProperty.getSwitchSubPath();
+				log.info("switch sub node Path is:{}",switchSubNodePath);
+				stat3 = curatorFramework.checkExists().forPath(switchSubNodePath);
+				if(null == stat3) {
+					curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath(switchSubNodePath);
+				}
+				setNodeData(switchSubNodePath,jobProperty.getSwitcher());
             } catch (Exception e) {
                 log.info("register the local node  exception:{}",e);
             }

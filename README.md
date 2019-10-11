@@ -10,6 +10,7 @@
 第一版本Angle.M1。里程碑版本。
 第二版本Angle.M2。20191007
 
+
 ## 架构图
 
 ![](image/arch1.png)
@@ -157,6 +158,15 @@ public class MainWorker extends WorkerRegister {
 目前只需要自己实现一个run方法即可。如果需要打印或者记录job的相关的信息，可以加一个属性jobName，jobName会被自动注入job的配置名字。
 
 
+## 20191012优化点
+* 新增job switcher属性，并注册到zookeeper。
+* 在yml文件中配置如下：
+```yml
+brave:
+  jobs:
+    - job: demo3
+      switcher: on
+```
 ## 下一版本可能迭代
 * 优化autoconfigure逻辑，包括：
 	- 注册逻辑优化，代码精简。
