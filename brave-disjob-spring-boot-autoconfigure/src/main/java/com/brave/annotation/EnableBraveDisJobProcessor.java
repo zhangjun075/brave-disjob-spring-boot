@@ -2,7 +2,7 @@ package com.brave.annotation;
 
 import java.lang.reflect.Field;
 
-import com.brave.job.common.WorkerRegister;
+import com.brave.job.common.BaseWorkerRegister;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.BeansException;
@@ -16,7 +16,7 @@ public class EnableBraveDisJobProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if(bean instanceof WorkerRegister) {
+		if(bean instanceof BaseWorkerRegister) {
 			EnableBraveDisJob enableBraveDisJob = AnnotationUtils.findAnnotation(bean.getClass(), EnableBraveDisJob.class);
 			String jobName = enableBraveDisJob.name();
 			try {
@@ -24,7 +24,7 @@ public class EnableBraveDisJobProcessor implements BeanPostProcessor {
 				field.setAccessible(true);
 				field.set(bean,jobName);
 				field.setAccessible(false);
-				((WorkerRegister) bean).init_1(jobName);
+				((BaseWorkerRegister) bean).init_1(jobName);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

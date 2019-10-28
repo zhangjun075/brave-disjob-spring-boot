@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author junzhang
  */
 @Slf4j
-public abstract class WorkerRegister {
+public abstract class BaseWorkerRegister {
 
     @Autowired
 	ClientConfiguration clientConfiguration;
@@ -89,6 +89,10 @@ public abstract class WorkerRegister {
         return result;
     }
 
+	/**
+	 * 不同的实现类不同的实现方法
+	 * @param ids
+	 */
     public abstract void run(String ids);
 
     /**

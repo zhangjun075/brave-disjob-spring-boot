@@ -1,7 +1,7 @@
 package com.brave.job;
 
 
-import com.brave.job.common.WorkerRegister;
+import com.brave.job.common.BaseWorkerRegister;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -39,9 +39,9 @@ public class JobFactory implements ApplicationContextAware {
     }
 
     public void process(String data,String path,String jobName) {
-        WorkerRegister workerRegister = null;
+        BaseWorkerRegister workerRegister = null;
         try {
-            workerRegister = (WorkerRegister) getBean(Class.forName(path));
+            workerRegister = (BaseWorkerRegister) getBean(Class.forName(path));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
