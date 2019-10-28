@@ -11,6 +11,7 @@ import com.brave.util.IpUtil;
 import com.brave.util.JobUtil;
 import com.brave.vo.JobLogPojo;
 import com.brave.vo.JobProperty;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
@@ -38,6 +39,18 @@ public class Dispatcher {
         //写日志
         JobProperty jobProperty = JobUtil.JOB_NODE_MAP.get(jobName);
         String exeDispatcherPath = jobProperty.getLock() + "/" + IpUtil.getLocalIP() + "-" + jobUtil.getPort() +"-dispatcher";
+
+        //added by zj for 开关判断
+		try{
+			String  switcher = dispatchClient.getNodeDate(jobProperty.getSwitchSubPath());
+			if(Strings.isNullOrEmpty(switcher) && !("true").equals(switcher)) {
+				log.info("{}任务开关状态：{},非打开状态，任务不执行。",jobProperty.getSwitchSubPath(),switcher);
+				return;
+			}
+		}catch (Exception e) {
+			log.info("获取任务的开关{}出异常:{};任务不执行，中断。",jobProperty.getSwitchSubPath(),e);
+			return;
+		}
 
         try {
             List<String> childNodes = ClientConfiguration.curatorFramework.getChildren().forPath(jobProperty.getLock());
