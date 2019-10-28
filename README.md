@@ -48,7 +48,7 @@ demo2:
 ```$xslt
 @Slf4j
 @Component
-public class MainWorker extends WorkerRegister {
+public class MainWorker extends BaseWorkerRegister {
 
     @JobName(name = "demo1")
     public String jobName;
@@ -134,7 +134,7 @@ public class MainDispatcher extends Dispatcher {
 @Slf4j
 @Component
 @EnableBraveDisJob(name = "demo3")
-public class MainWorker extends WorkerRegister {
+public class MainWorker extends BaseWorkerRegister {
 
     public String jobName;
 
